@@ -6,6 +6,7 @@ const expect = require('chai').expect
 const cors = require('cors')
 const helmet = require('helmet')
 require('dotenv').config()
+const mongoose = require('mongoose')
 
 const apiRoutes = require('./routes/api.js')
 const fccTestingRoutes = require('./routes/fcctesting.js')
@@ -38,7 +39,7 @@ app.route('/')
 //For FCC testing purposes
 fccTestingRoutes(app)
 
-//Routing for API 
+//Routing for API
 apiRoutes(app)
 
 //404 Not Found Middleware
@@ -49,8 +50,15 @@ app.use(function (req, res, next) {
 })
 
 //Start our server and tests!
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3000, async () => {
   console.log("Listening on port " + process.env.PORT)
+  await mongoose.connect(process.env.DB,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false
+    })
+
   if (process.env.NODE_ENV === 'test') {
     console.log('Running Tests...')
     setTimeout(function () {

@@ -257,6 +257,7 @@ suite('Functional Tests', function () {
         .end((err, res) => {
           assert.equal(res.status, 200)
           assert.equal(res.body.message, '_id error')
+          done()
         })
     })
 
@@ -271,12 +272,13 @@ suite('Functional Tests', function () {
         .end((err, res) => {
           const _id = res.body._id
           chai.request(server)
-          .del('/api/issues/test')
-          .send({_id})
-          .end((err, res) => {
-            assert.equal(res.status, 200)
-            assert.equal(res.body.message, `deleted ${_id}`)
-          })
+            .del('/api/issues/test')
+            .send({ _id })
+            .end((err, res) => {
+              assert.equal(res.status, 200)
+              assert.equal(res.body.message, `deleted ${_id}`)
+              done()
+            })
         })
     })
   })
